@@ -1,0 +1,6 @@
+[submodule "libvterm"]
+	path = deps/libvterm
+	url = https://github.com/vbogretsov/libvterm
+[submodule "sdl"]
+	path = deps/sdl
+	url = https://github.com/SDL-mirror/SDL.git

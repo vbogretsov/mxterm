@@ -1,5 +1,5 @@
 CFLAGS				+= -Ideps -Wall -Werror -pedantic
-LDFLAGS				+= -Llib
+LDFLAGS				+= -Llib -framework Cocoa
 
 # DEPSLIST			= toml.a
 
@@ -7,7 +7,7 @@ LDFLAGS				+= -Llib
 
 NAME				= mxterm
 SRC					= $(wildcard src/*.c)
-OBJ					= $(SRC:.c=.o)
+OBJ					= $(SRC:.m=.o)
 LIB					= lib
 BIN					= bin
 APP					= $(BIN)/$(NAME)
