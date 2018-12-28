@@ -85,6 +85,13 @@ mx_surface_t* mx_font_render(
     const char* txt);
 
 
+mx_surface_t* mx_glyph_render(
+    mx_font_t* font,
+    char c,
+    mx_color_t fg,
+    mx_color_t bg);
+
+
 void mx_surface_free(mx_surface_t* p);
 
 #endif //! MX_REND_H

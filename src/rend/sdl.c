@@ -29,6 +29,10 @@ int mx_graphics_init() {
         SDL_Log("error: %s", SDL_GetError());
         return 1;
     }
+
+    // SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1" );
+    // SDL_SetHintWithPriority( "SDL_HINT_RENDER_SCALE_QUALITY", "1", SDL_HINT_OVERRIDE );
+
     return 0;
 }
 
@@ -49,7 +53,7 @@ mx_window_t* mx_window_new(
         int h,
         uint32_t flags) {
 
-    SDL_Window* native = SDL_CreateWindow(title, x, y, w, h, flags);
+    SDL_Window* native = SDL_CreateWindow(title, x, y, w, h, flags | SDL_WINDOW_OPENGL);
     if (!native) {
         return NULL;
     }
@@ -94,6 +98,8 @@ void mx_device_render_texture(
         mx_rect_t rect) {
 
     SDL_QueryTexture((SDL_Texture*)texture, NULL, NULL, &rect.w, &rect.h);
+    // rect.h += 1;
+    // rect.w += 1;
     SDL_RenderCopy(device->native, texture, NULL, &rect);
 }
 
@@ -119,7 +125,16 @@ int mx_event_type(mx_event_t* e) {
 }
 
 mx_font_t* mx_font_open(const char* path, uint32_t size) {
-    return (mx_font_t*)TTF_OpenFont(path, size);
+    // TTF_Font* font = TTF_OpenFont(path, size);
+    TTF_Font* font = TTF_OpenFontIndex(path, size, 0);
+    if (!font) {
+        return NULL;
+    }
+    TTF_SetFontHinting(font, TTF_HINTING_LIGHT);
+    TTF_SetFontKerning(font, 0);
+    TTF_SetFontOutline(font, 0);
+    // TTF_SetFontStyle(font, TTF_STYLE_BOLD);
+    return (mx_font_t*)font;
 }
 
 void mx_font_close(mx_font_t* p) {
@@ -131,9 +146,19 @@ mx_surface_t* mx_font_render(
         mx_color_t color,
         const char* text) {
 
+    // mx_color_t bg = { 0x0, 0x0, 0x0, 0};
     return (mx_surface_t*)TTF_RenderText_Blended(font, text, color);
 }
 
+mx_surface_t* mx_glyph_render(
+        mx_font_t* font,
+        char c,
+        mx_color_t fg,
+        mx_color_t bg) {
+
+    return (mx_surface_t*)TTF_RenderGlyph_Shaded(font, (uint16_t)c, fg, bg);
+    // return (mx_surface_t*)TTF_RenderGlyph_Blended(font, (uint16_t)c, fg);
+}
 
 void mx_surface_free(mx_surface_t* p) {
     SDL_FreeSurface((SDL_Surface*)p);
