@@ -86,9 +86,9 @@ static int demo(SDL_Window* window, SDL_Renderer* renderer) {
         SDL_RenderPresent(renderer);
 
         SDL_DestroyTexture(scene);
-
-        SDL_Delay(1);
     }
+
+    SDL_FreeSurface(screen);
 
     return 0;
 }
